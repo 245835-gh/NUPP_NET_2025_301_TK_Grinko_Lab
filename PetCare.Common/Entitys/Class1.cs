@@ -1,4 +1,4 @@
-﻿namespace PetCare.Common
+﻿namespace PetCare.Common.Entitys
 {
     public class Animal
     {
