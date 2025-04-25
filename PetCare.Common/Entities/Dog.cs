@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetCare.Common.Entitys
+namespace PetCare.Common.Entities
 {
     //Клас собак,що наслідує Animal
     public class Dog : Animal

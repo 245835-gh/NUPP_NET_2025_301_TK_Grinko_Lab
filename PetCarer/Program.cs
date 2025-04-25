@@ -1,4 +1,5 @@
-﻿using PetCare.Common.Entitys;
+﻿using PetCare.Common.Entities;
+using PetCare.Common.Services;
 using System;
 
 var dogService = new CrudService<Dog>();

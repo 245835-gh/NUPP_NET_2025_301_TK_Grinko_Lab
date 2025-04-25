@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetCare.Common.Entitys
+namespace PetCare.Common.Entities
 {
     //Базовий клас для всіх тварин
     public class Animal

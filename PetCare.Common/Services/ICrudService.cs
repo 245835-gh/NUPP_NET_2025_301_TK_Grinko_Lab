@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetCare.Common.Entitys
+namespace PetCare.Common.Services
 {
-    public interface ICrudService<T>{
+    public interface ICrudService<T>
+    {
         void Create(T element);
         T Read(Guid id);
         IEnumerable<T> ReadAll();
