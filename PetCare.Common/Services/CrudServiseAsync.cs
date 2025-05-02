@@ -12,7 +12,7 @@ namespace PetCare.Common.Services
     {
         private readonly ConcurentDictionary<Guid, T> _storage = new();
         private readonly Func<T,Guid> _getId;
-        public CrudServiceAsync()
+        public CrudServiseAsync()
         {
             var prop = typeof(T).GetProperty("Id");
             if ( prop == null || prop.PropertyType != typeof(Guid))
@@ -76,5 +76,15 @@ namespace PetCare.Common.Services
         public IEnumerable<T> GetEnumerator() => _storage.Values.GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public Task<bool> UpdateAsync(T element)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

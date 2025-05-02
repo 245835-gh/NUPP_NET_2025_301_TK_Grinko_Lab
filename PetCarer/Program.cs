@@ -34,6 +34,23 @@ class Program
 {
     static async Task Main()
     {
+        Console.WriteLine("=== Створення 1000 собак та котів ===");
+        await RunDogAndCatGenerationExample();
+
+        Console.WriteLine("\n=== Демонстрація lock ===");
+        TestLock();
+
+        Console.WriteLine("\n=== Демонстрація SemaphoreSlim ===");
+        TestSemaphore();
+
+        Console.WriteLine("\n=== Демонстрація AutoResetEvent ===");
+        TestAutoResetEvent();
+
+        Console.WriteLine("\nНатисніть будь-яку клавішу для виходу...");
+        Console.ReadKey();
+    }
+    static async Task RunDogAndCatGenerationExample()
+    {
         var dogService = new CrudServiseAsync<Dog>();
         var catService = new CrudServiseAsync<Cat>();
         var dogs = new ConcurrentBag<Dog>();
@@ -73,6 +90,50 @@ class Program
         await dogService.SaveAsync("dogs.json");
         await catService.SaveAsync("cat.json");
         Console.WriteLine("Дані збережені у файлах: dogs.json та cat.json");
+    }
 
+    static void TestLock()
+    {
+        object locker = new object();
+        int counter = 0;
+
+        Parallel.For(0, 1000, i =>
+        {
+            lock (locker)
+            {
+                counter++;
+            }
+        });
+
+        Console.WriteLine($"Лічильник (через lock): {counter}");
+    }
+
+    static void TestSemaphore()
+    {
+        var semaphore = new SemaphoreSlim(3);
+
+        Parallel.For(0, 10, i =>
+        {
+            semaphore.Wait();
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Потік {i} працює...");
+            Task.Delay(100).Wait();
+            semaphore.Release();
+        });
+    }
+
+    static void TestAutoResetEvent()
+    {
+        var autoEvent = new AutoResetEvent(false);
+
+        Task.Run(() =>
+        {
+            Console.WriteLine("Очікуємо сигнал...");
+            autoEvent.WaitOne(); // блокуємо потік
+            Console.WriteLine("Сигнал отримано!");
+        });
+
+        Task.Delay(1000).Wait();
+        Console.WriteLine("Надсилаємо сигнал...");
+        autoEvent.Set();
     }
 }
