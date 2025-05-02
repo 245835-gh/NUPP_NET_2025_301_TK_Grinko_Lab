@@ -12,6 +12,26 @@ namespace PetCare.Common.Entities
         public string Breed { get; set; } // Порода собаки
         public string ActivityLevel { get; set; }// Рівень активності (низький, середній, високий)
 
+        //Статичний метод CreateNew
+        public static Dog CreateNew()
+        {
+            var breeds = new[] { "Лабрадор", "Овчарка", "Бульдог", "Хаскі" };
+            var activities = new[] { "Низький", "Середній", "Високий" };
+            var names = new[] { "Рекс", "Барс", "Дружок", "Мухтар", "Сніжок" };
+
+            var rand = new Random();
+
+            return new Dog
+            {
+                Id = Guid.NewGuid(),
+                Name = names[rand.Next(names.Length)],
+                Age = rand.Next(1, 15),
+                Species = "Собака",
+                Breed = breeds[rand.Next(breeds.Length)],
+                ActivityLevel = activities[rand.Next(activities.Length)]
+            };
+        }
+
         //Подія
         public event BarkHandler OnBark;
 
