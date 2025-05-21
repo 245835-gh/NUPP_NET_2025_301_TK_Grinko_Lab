@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PetCare.Infrastructure;
 
 namespace PetCare.Common.Services
 {
-    public class CrudDbService<T> : ICrudServiceAsync<T> where T : class
+    public class CrudDbService<T> : ICrudServiseAsync<T> where T : class
 {
     private readonly IRepository<T> _repository;
     private readonly PetCareContext _context;

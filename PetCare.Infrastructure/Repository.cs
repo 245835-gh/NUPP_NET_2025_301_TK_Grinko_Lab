@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
-public class Repository<T> : IRepository<T> where T : class
+namespace PetCare.Infrastructure{
+    public class Repository<T> : IRepository<T> where T : class
 {
     private readonly PetCareContext _context;
     private readonly DbSet<T> _dbSet;
@@ -24,4 +25,5 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet.Remove(entity);
         return Task.CompletedTask;
     }
+}
 }
