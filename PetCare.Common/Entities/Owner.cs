@@ -23,10 +23,9 @@ namespace PetCare.Common.Entitys
 
             var rand = new Random();
 
-            return new Owner
+            return new Owner(names[rand.Next(names.Length)],
+            phones[rand.Next(phones.Length)])
             {
-                Name = names[rand.Next(names.Length)],
-                PhoneNumber = phones[rand.Next(phones.Length)],
                 Pets = new List<Animal>
                 {
                     Dog.CreateNew(),
