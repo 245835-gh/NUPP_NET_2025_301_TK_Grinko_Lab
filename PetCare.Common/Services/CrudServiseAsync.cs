@@ -8,83 +8,49 @@ using System.Threading.Tasks;
 
 namespace PetCare.Common.Services
 {
-    public class CrudServiseAsync<T> : ICrudServiseAsync<T> where T : class
+    public class CrudDbService<T> : ICrudServiceAsync<T> where T : class
+{
+    private readonly IRepository<T> _repository;
+    private readonly PetCareContext _context;
+
+    public CrudDbService(IRepository<T> repository, PetCareContext context)
     {
-        private readonly ConcurentDictionary<Guid, T> _storage = new();
-        private readonly Func<T,Guid> _getId;
-        public CrudServiseAsync()
-        {
-            var prop = typeof(T).GetProperty("Id");
-            if ( prop == null || prop.PropertyType != typeof(Guid))
-            {
-                throw new InvalidOperationException("Клас повинен мати властивість ID типу Guid");
-                _getId = (T obj) => (Guid)prop.GetValue(obj);
-            }
-        }
-
-        public async Task<bool> CreateAsync(T element)
-        {
-            return await Task.Run(() =>
-            {
-                var id = _getId(element);
-                return _storage.TryAdd(id, element);
-            });
-        }
-
-        public async Task<T> ReadAsync(Guid id)
-        {
-            return await Task.Run(() =>
-            {
-                _storage.TryGetValue(id, out var value);
-                return value;
-            });
-        }
-
-        public async Task<IEnumerable<T>> ReadAllAsync()
-        {
-            return await Task.FromResult(_storage.Values);
-        }
-
-        public async Task<IEnumerable<T>> ReadAllAsync(int page, int amount)
-        {
-            return await Task.FromResult(_storage.Value.Skip((page - 1) * amount).Take(amount));
-        }
-
-        public async Task<bool> RemoveAsync(T element)
-        {
-            return await Task.Run(() =>
-            {
-                var id = _getId(element);
-                return _storage.TryRemove(id, out _);
-            });
-        }
-
-        public async Task<bool> SaveAsync(string filePath)
-        {
-            try
-            {
-                var json = JsonSerializer.Serialize(_storage.Value);
-                await File.WriteAllTextAsync(filePath, json);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public IEnumerable<T> GetEnumerator() => _storage.Values.GetEnumerator();
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public Task<bool> UpdateAsync(T element)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        _repository = repository;
+        _context = context;
     }
+
+    public async Task<bool> CreateAsync(T element)
+    {
+        await _repository.AddAsync(element);
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<T> ReadAsync(Guid id)
+    {
+        // Примітка: адаптувати для int/Guid
+        return await _repository.GetByIdAsync((int)(object)id);
+    }
+
+    public async Task<IEnumerable<T>> ReadAllAsync() => await _repository.GetAllAsync();
+
+    public async Task<IEnumerable<T>> ReadAllAsync(int page, int amount)
+    {
+        return (await _repository.GetAllAsync()).Skip((page - 1) * amount).Take(amount);
+    }
+
+    public async Task<bool> UpdateAsync(T element)
+    {
+        await _repository.Update(element);
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool> RemoveAsync(T element)
+    {
+        await _repository.Delete(element);
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool> SaveAsync() => await _context.SaveChangesAsync() > 0;
+}
+
 }
