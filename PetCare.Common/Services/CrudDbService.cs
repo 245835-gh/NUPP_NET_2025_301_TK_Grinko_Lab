@@ -20,7 +20,11 @@ namespace PetCare.Common.Services
         _context = context;
     }
 
-    public async Task<bool> CreateAsync(T element)
+        public CrudDbService()
+        {
+        }
+
+        public async Task<bool> CreateAsync(T element)
     {
         await _repository.AddAsync(element);
         return await _context.SaveChangesAsync() > 0;
@@ -51,7 +55,12 @@ namespace PetCare.Common.Services
         return await _context.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> SaveAsync() => await _context.SaveChangesAsync() > 0;
-}
+    public async Task<bool> SaveAsync(string v) => await _context.SaveChangesAsync() > 0;
+
+        public Task<bool> SaveAsync()
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }

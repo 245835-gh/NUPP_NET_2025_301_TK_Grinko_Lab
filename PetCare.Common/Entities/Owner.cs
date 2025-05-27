@@ -16,7 +16,7 @@ namespace PetCare.Common.Entitys
         public List<Animal> Pets { get; set; } = new List<Animal>(); //список власника тварин
 
         //Статичний метод CreateNew
-        public static Cat CreateNew()
+        public static Owner CreateNew()
         {
             var names = new[] { "Олексій", "Марина", "Ігор", "Анна", "Петро" };
             var phones = new[] { "123-456", "555-999", "777-111", "999-888", "321-654" };
@@ -24,7 +24,7 @@ namespace PetCare.Common.Entitys
             var rand = new Random();
 
             return new Owner(names[rand.Next(names.Length)],
-            phones[rand.Next(phones.Length)])
+                phones[rand.Next(phones.Length)])
             {
                 Pets = new List<Animal>
                 {

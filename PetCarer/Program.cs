@@ -51,19 +51,19 @@ class Program
     }
     static async Task RunDogAndCatGenerationExample()
     {
-        var dogService = new CrudServiseAsync<Dog>();
-        var catService = new CrudServiseAsync<Cat>();
+        var dogService = new CrudDbService<Dog>();
+        var catService = new CrudDbService<Cat>();
         var dogs = new ConcurrentBag<Dog>();
         var cats = new ConcurrentBag<Cat>();
 
         Parallel.Invoke(
-            () => Parallel.For(0, 1000, i => dogs.Add(Dog.CreateNew())),
-            () => Parallel.For(0, 1000, i => cats.Add(Cat.CreateNew())));
+            () => Parallel.For(0, 1000, async i => await dogService.CreateAsync(Dog.CreateNew())),
+            () => Parallel.For(0, 1000, async i => await catService.CreateAsync(Cat.CreateNew())));
 
-        await Task.WhenAll(
-            (Task)dogs.Select(d => dogService.CreateAsync(d)),
-            (Task)cats.Select(c => catService.CreateAsync(c))
-            );
+        //await Task.WhenAll(
+        //    dogs.Select(d => dogService.CreateAsync(d)),
+        //    cats.Select(c => catService.CreateAsync(c))
+        //    );
         // LINQ: аналіз
         var dogList = await dogService.ReadAllAsync();
         var catList = await catService.ReadAllAsync();
