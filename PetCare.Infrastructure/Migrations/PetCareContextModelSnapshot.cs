@@ -36,7 +36,7 @@ namespace PetCare.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Animals", (string)null);
+                    b.ToTable("Animal", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -53,7 +53,7 @@ namespace PetCare.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("PetCare.Infrastructure.Models.DogModel", b =>
@@ -68,7 +68,7 @@ namespace PetCare.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.ToTable("Dogs", (string)null);
+                    b.ToTable("Dog", (string)null);
                 });
 
             modelBuilder.Entity("PetCare.Infrastructure.Models.AnimalModel", b =>

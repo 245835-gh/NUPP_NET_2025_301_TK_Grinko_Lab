@@ -18,17 +18,13 @@ namespace PetCare.Common.Services
     {
         _repository = repository;
         _context = context;
-    }
-
-        public CrudDbService()
+        }
+        public async Task<bool> CreateAsync(T element)
         {
+            await _repository.AddAsync(element);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> CreateAsync(T element)
-    {
-        await _repository.AddAsync(element);
-        return await _context.SaveChangesAsync() > 0;
-    }
 
     public async Task<T> ReadAsync(Guid id)
     {
