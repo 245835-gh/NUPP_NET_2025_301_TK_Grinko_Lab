@@ -10,26 +10,32 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        // 1. Створюємо параметри для SQLite
         var options = new DbContextOptionsBuilder<PetCareContext>()
-            .UseSqlite("Data Source=petcare.db")
+            .UseSqlite("Data Source=C:\\Users\\Student\\source\\repos\\NUPP_NET_2025_301_TK_Grinko_Lab\\PetCare.Infrastructure\\petcare.db")
             .Options;
 
-        // 2. Створюємо контекст і репозиторій
         using var context = new PetCareContext(options);
         var dogRepo = new Repository<DogModel>(context);
         var dogService = new CrudDbService<DogModel>(dogRepo, context);
-
-        // 3. Створюємо нового собаку
+        var OwnerRepo = new Repository<OwnerModel>(context);
+        var OwnerService = new CrudDbService<OwnerModel>(OwnerRepo, context);
+        var newOwner = new OwnerModel
+        {
+            Id = 1,
+            FullName = "None"
+        };
         var newDog = new DogModel
         {
             Name = "Барс",
             Age = 4,
             Breed = "Овчарка",
-            ActivityLevel = "Середній"
+            ActivityLevel = "Середній",
+            OwnerId = 1
         };
 
+        await OwnerService.CreateAsync(newOwner);
         await dogService.CreateAsync(newDog);
+
 
         // 4. Зчитуємо всі дані з БД
         var dogs = await dogService.ReadAllAsync();
