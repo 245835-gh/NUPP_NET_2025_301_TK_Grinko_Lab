@@ -28,7 +28,6 @@ namespace PetCare.Common.Services
 
     public async Task<T> ReadAsync(Guid id)
     {
-        // Примітка: адаптувати для int/Guid
         return await _repository.GetByIdAsync((int)(object)id);
     }
 
@@ -58,5 +57,6 @@ namespace PetCare.Common.Services
             throw new NotImplementedException();
         }
     }
+
 
 }
