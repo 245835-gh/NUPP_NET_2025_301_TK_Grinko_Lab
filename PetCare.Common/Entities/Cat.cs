@@ -20,14 +20,13 @@ namespace PetCare.Common.Entities
 
             var rand = new Random();
 
-            return new Cat
+            return new Cat(names[rand.Next(names.Length)],
+            rand.Next(1, 20),
+            furTypes[rand.Next(furTypes.Length)],
+            rand.Next(0, 2) == 1)
             {
                 Id = Guid.NewGuid(),
-                Name = names[rand.Next(names.Length)],
-                Age = rand.Next(1, 20),
                 Species = "Кішка",
-                FurType = furTypes[rand.Next(furTypes.Length)],
-                IsIndependent = rand.Next(0, 2) == 1
             };
         }
 

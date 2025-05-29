@@ -21,14 +21,13 @@ namespace PetCare.Common.Entities
 
             var rand = new Random();
 
-            return new Dog
+            return new Dog(names[rand.Next(names.Length)],
+            rand.Next(1, 15),
+            breeds[rand.Next(breeds.Length)],
+            activities[rand.Next(activities.Length)])
             {
                 Id = Guid.NewGuid(),
-                Name = names[rand.Next(names.Length)],
-                Age = rand.Next(1, 15),
-                Species = "Собака",
-                Breed = breeds[rand.Next(breeds.Length)],
-                ActivityLevel = activities[rand.Next(activities.Length)]
+                Species = "Собака"
             };
         }
 

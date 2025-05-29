@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PetCare.Common.Services
 {
-    public interface ICrudServiseAsync<T>: IEnumerable<T>
+    public interface ICrudServiseAsync<T>
     {
         Task<bool> CreateAsync(T element);
         Task<T> ReadAsync(Guid id);
@@ -14,7 +14,7 @@ namespace PetCare.Common.Services
         Task<IEnumerable<T>> ReadAllAsync(int pasge, int amount);
         Task<bool> UpdateAsync(T element);
         Task<bool> RemoveAsync(T element);
-        Task<bool> SaveAsync(string filePath);
+        Task<bool> SaveAsync();
 
     }
 }

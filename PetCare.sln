@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.Common", "PetCare.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.Console", "PetCarer\PetCare.Console.csproj", "{4BE132DA-5FE2-41D9-91FD-03C8B121BE6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Infrastructure", "PetCare.Infrastructure\PetCare.Infrastructure.csproj", "{136A5486-EAF8-479D-B585-D8BF0B100358}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4BE132DA-5FE2-41D9-91FD-03C8B121BE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BE132DA-5FE2-41D9-91FD-03C8B121BE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BE132DA-5FE2-41D9-91FD-03C8B121BE6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{136A5486-EAF8-479D-B585-D8BF0B100358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136A5486-EAF8-479D-B585-D8BF0B100358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136A5486-EAF8-479D-B585-D8BF0B100358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136A5486-EAF8-479D-B585-D8BF0B100358}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

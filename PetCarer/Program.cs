@@ -1,139 +1,44 @@
-﻿using PetCare.Common.Entities;
-using PetCare.Common.Services;
-using System;
+﻿using System;
 using System.Linq;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
-
-/*var dogService = new CrudService<Dog>();
-var dog = new Dog("Барс",4,"Овчарка","Високий"){
-    Id = Guid.NewGuid(),
-    Name = "Барс",
-    Age = 4,
-    Species = "Собака",
-    Breed = "Овчарка",
-    ActivityLevel = "Високий"
-};
-dogService.Create(dog);
-Console.WriteLine("Збережені тварини:");
-foreach (var d in dogService.ReadAll()){
-    Console.WriteLine($"{d.Name} ({d.Breed})");
-}
-// Зберігаємо
-dogService.Save("dogs.json");
-// Завантажуємо
-var loadedService = new CrudService<Dog>();
-loadedService.Load("dogs.json");
-
-Console.WriteLine("\nПісля завантаження:");
-foreach (var d in loadedService.ReadAll()){
-    Console.WriteLine($"{d.Name} ({d.Breed})");
-}*/
+using Microsoft.EntityFrameworkCore;
+using PetCare.Common.Services;
+using PetCare.Infrastructure;
+using PetCare.Infrastructure.Models;
 
 class Program
 {
-    static async Task Main()
+    static async Task Main(string[] args)
     {
-        Console.WriteLine("=== Створення 1000 собак та котів ===");
-        await RunDogAndCatGenerationExample();
+        // 1. Створюємо параметри для SQLite
+        var options = new DbContextOptionsBuilder<PetCareContext>()
+            .UseSqlite("Data Source=petcare.db")
+            .Options;
 
-        Console.WriteLine("\n=== Демонстрація lock ===");
-        TestLock();
+        // 2. Створюємо контекст і репозиторій
+        using var context = new PetCareContext(options);
+        var dogRepo = new Repository<DogModel>(context);
+        var dogService = new CrudDbService<DogModel>(dogRepo, context);
 
-        Console.WriteLine("\n=== Демонстрація SemaphoreSlim ===");
-        TestSemaphore();
-
-        Console.WriteLine("\n=== Демонстрація AutoResetEvent ===");
-        TestAutoResetEvent();
-
-        Console.WriteLine("\nНатисніть будь-яку клавішу для виходу...");
-        Console.ReadKey();
-    }
-    static async Task RunDogAndCatGenerationExample()
-    {
-        var dogService = new CrudServiseAsync<Dog>();
-        var catService = new CrudServiseAsync<Cat>();
-        var dogs = new ConcurrentBag<Dog>();
-        var cats = new ConcurrentBag<Cat>();
-
-        Parallel.Invoke(
-            () => Parallel.For(0, 1000, i => dogs.Add(Dog.CreateNew())),
-            () => Parallel.For(0, 1000, i => cats.Add(Cat.CreateNew())));
-
-        await Task.WhenAll(
-            (Task)dogs.Select(d => dogService.CreateAsync(d)),
-            (Task)cats.Select(c => catService.CreateAsync(c))
-            );
-        // LINQ: аналіз
-        var dogList = await dogService.ReadAllAsync();
-        var catList = await catService.ReadAllAsync();
-
-        var minAgeDog = dogList.Min(d => d.Age);
-        var maxAgeDog = dogList.Max(d => d.Age);
-        var avgAgeDog = dogList.Average(d => d.Age);
-
-        var minAgeCat = catList.Min(d => d.Age);
-        var maxAgeCat = catList.Max(d => d.Age);
-        var avgAgeCat = catList.Average(d => d.Age);
-
-        Console.WriteLine($"Собак створено: {dogList.Count()}");
-        Console.WriteLine($"Мін. вік: {minAgeDog}");
-        Console.WriteLine($"Макс. вік: {maxAgeDog}");
-        Console.WriteLine($"Середній вік: {avgAgeDog:F2}");
-
-        Console.WriteLine($"Котів створено: {catList.Count()}");
-        Console.WriteLine($"Мін. вік: {minAgeCat}");
-        Console.WriteLine($"Макс. вік: {maxAgeCat}");
-        Console.WriteLine($"Середній вік: {avgAgeCat:F2}");
-
-        // Збереження в файл
-        await dogService.SaveAsync("dogs.json");
-        await catService.SaveAsync("cat.json");
-        Console.WriteLine("Дані збережені у файлах: dogs.json та cat.json");
-    }
-
-    static void TestLock()
-    {
-        object locker = new object();
-        int counter = 0;
-
-        Parallel.For(0, 1000, i =>
+        // 3. Створюємо нового собаку
+        var newDog = new DogModel
         {
-            lock (locker)
-            {
-                counter++;
-            }
-        });
+            Name = "Барс",
+            Age = 4,
+            Breed = "Овчарка",
+            ActivityLevel = "Середній"
+        };
 
-        Console.WriteLine($"Лічильник (через lock): {counter}");
-    }
+        await dogService.CreateAsync(newDog);
 
-    static void TestSemaphore()
-    {
-        var semaphore = new SemaphoreSlim(3);
-
-        Parallel.For(0, 10, i =>
+        // 4. Зчитуємо всі дані з БД
+        var dogs = await dogService.ReadAllAsync();
+        Console.WriteLine("Собаки в базі даних:");
+        foreach (var dog in dogs)
         {
-            semaphore.Wait();
-            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Потік {i} працює...");
-            Task.Delay(100).Wait();
-            semaphore.Release();
-        });
-    }
+            Console.WriteLine($"{dog.Name} ({dog.Breed}), вік: {dog.Age}, активність: {dog.ActivityLevel}");
+        }
 
-    static void TestAutoResetEvent()
-    {
-        var autoEvent = new AutoResetEvent(false);
-
-        Task.Run(() =>
-        {
-            Console.WriteLine("Очікуємо сигнал...");
-            autoEvent.WaitOne(); // блокуємо потік
-            Console.WriteLine("Сигнал отримано!");
-        });
-
-        Task.Delay(1000).Wait();
-        Console.WriteLine("Надсилаємо сигнал...");
-        autoEvent.Set();
+        Console.WriteLine("Готово!");
     }
 }
